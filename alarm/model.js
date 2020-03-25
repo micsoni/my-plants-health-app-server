@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
+const AlarmEvent = require("../alarmEvent/model");
 
 const Alarm = db.define(
   "alarm",
@@ -29,5 +30,9 @@ const Alarm = db.define(
     }
   }
 );
+
+//alarm relation with alarmEvent
+AlarmEvent.belongsTo(Alarm);
+Alarm.hasMany(AlarmEvent);
 
 module.exports = Alarm;

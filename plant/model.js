@@ -1,5 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
+const Alarm = require("../alarm/model");
+const Note = require("../note/model");
 
 const Plant = db.define("plant", {
   name: {
@@ -16,5 +18,13 @@ const Plant = db.define("plant", {
     allowNull: true
   }
 });
+
+//plant relation with alarm
+Alarm.belongsTo(Plant);
+Plant.hasMany(Alarm);
+
+//plant relation with note
+Note.belongsTo(Plant);
+Plant.hasMany(Note);
 
 module.exports = Plant;

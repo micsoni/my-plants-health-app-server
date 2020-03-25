@@ -6,7 +6,7 @@ const databaseUrl =
 
 const db = new Sequelize(databaseUrl);
 
-db.sync({ force: false })
+db.sync({ force: true })
   .then(() => console.log("Database connect"))
   .catch(console.error);
 
