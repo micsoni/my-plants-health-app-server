@@ -1,58 +1,36 @@
 const express = require("express");
 const auth = require("../auth/middleware");
 const authorize = require("../user/middleware");
+const Note = require("./model")
 
 const router = express.Router();
 
-// prettier-ignore
-
-router.get("/user/:userId/plant", auth, authorize, async (req, res, next) => {
-  const limit = Math.min(req.query.limit || 8, 50);
-  const offset = req.query.offset || 0;
+router.post("/note", auth, authorize, async (req, res, next) => {
   try {
-    const allPlants = await Plant.findAndCountAll({
-      include: [Alarm],
-      limit,
-      offset
-    });
-
-    allPlants.pageCount = Math.ceil(allPlants.count / limit);
-    allPlants.pages = [...Array(allPlants.pageCount).keys()].map(key => ({
-      number: ++key
-    }));
-
-    res.send(allPlants);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/user/:userId/plant", auth, authorize, async (req, res, next) => {
-  try {
-    if (!req.body.name) {
+    if (!req.body.text) {
       res.status(400).send({
-        message: "All plants must have a name"
+        message: "You can't have an empty note"
       });
     } else {
-      const postPlant = await Plant.create(req.body);
-      res.send(postPlant);
+      const postNote = await Note.create(req.body);
+      res.send(postNote);
     }
   } catch (error) {
     next(error);
   }
 });
 
-// prettier-ignore
-router.put("/user/:userId/plant/:plantId", auth, authorize, 
+
+router.put("/note/:noteId", auth, authorize, 
 async (req, res, next) => {
     try {
-      if (!req.body.name) {
+      if (!req.body.text) {
         res.status(400).send({
-          message: "All plants must have a name"
+          message:  "You can't have an empty note"
         });
       } else {
-        const plant = await Plant.findByPk(req.params.plantId);
-        const updated = await plant.update(req.body);
+        const note = await Note.findByPk(req.params.noteId);
+        const updated = await note.update(req.body);
         res.send(updated);
       }
     } catch (error) {
@@ -61,13 +39,12 @@ async (req, res, next) => {
   }
 );
 
-// prettier-ignore
-router.delete("/user/:userId/plant/:plantId", auth, authorize,
+router.delete("/note/:noteId", auth, authorize,
   async (req, res, next) => {
     try {
-      const number = await Plant.destroy({ where: { id: req.params.plantId } });
+      const number = await Note.destroy({ where: { id: req.params.noteId } });
       if (number === 0) {
-        res.status(404).send({ message: "No plant found" });
+        res.status(404).send({ message: "No note found" });
       } else {
         res.status(202).json(number);
       }

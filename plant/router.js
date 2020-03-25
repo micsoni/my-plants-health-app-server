@@ -4,33 +4,31 @@ const auth = require("../auth/middleware");
 const Alarm = require("../alarm/model");
 const AlarmEvent = require("../alarmEvent/model");
 const authorize = require("../user/middleware");
-const Note = require("../note/model")
+const Note = require("../note/model");
 
 const router = express.Router();
 
-// prettier-ignore
-router.get("/user/:userId/plant/:plantId", auth, authorize, 
-async (req, res, next) => {
-    try {
-      const plantFound = await Plant.findByPk(req.params.plantId, {
-        include: [{ model: Alarm, include: [AlarmEvent] }, Note]
-      });
-      if (!plantFound) {
-        res.status(404).send({ message: "Plant not found" });
-      } else {
-        res.send(plantFound);
-      }
-    } catch (error) {
-      next(error);
+router.get("/plant/:plantId", auth, async (req, res, next) => {
+  try {
+    const plantFound = await Plant.findByPk(req.params.plantId, {
+      include: [{ model: Alarm, include: [AlarmEvent] }, Note]
+    });
+    if (!plantFound) {
+      res.status(404).send({ message: "Plant not found" });
+    } else {
+      res.send(plantFound);
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
-router.get("/user/:userId/plant", auth, authorize, async (req, res, next) => {
+router.get("/plant", auth, async (req, res, next) => {
   const limit = Math.min(req.query.limit || 8, 50);
   const offset = req.query.offset || 0;
   try {
     const allPlants = await Plant.findAndCountAll({
+      where: { userId: req.user.dataValues.id },
       include: [Alarm],
       limit,
       offset
@@ -47,7 +45,7 @@ router.get("/user/:userId/plant", auth, authorize, async (req, res, next) => {
   }
 });
 
-router.post("/user/:userId/plant", auth, authorize, async (req, res, next) => {
+router.post("/plant", auth, async (req, res, next) => {
   try {
     if (!req.body.name) {
       res.status(400).send({
@@ -62,39 +60,33 @@ router.post("/user/:userId/plant", auth, authorize, async (req, res, next) => {
   }
 });
 
-// prettier-ignore
-router.put("/user/:userId/plant/:plantId", auth, authorize, 
-async (req, res, next) => {
-    try {
-      if (!req.body.name) {
-        res.status(400).send({
-          message: "All plants must have a name"
-        });
-      } else {
-        const plant = await Plant.findByPk(req.params.plantId);
-        const updated = await plant.update(req.body);
-        res.send(updated);
-      }
-    } catch (error) {
-      next(error);
+router.put("/plant/:plantId", auth, async (req, res, next) => {
+  try {
+    if (!req.body.name) {
+      res.status(400).send({
+        message: "All plants must have a name"
+      });
+    } else {
+      const plant = await Plant.findByPk(req.params.plantId);
+      const updated = await plant.update(req.body);
+      res.send(updated);
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
-// prettier-ignore
-router.delete("/user/:userId/plant/:plantId", auth, authorize,
-  async (req, res, next) => {
-    try {
-      const number = await Plant.destroy({ where: { id: req.params.plantId } });
-      if (number === 0) {
-        res.status(404).send({ message: "No plant found" });
-      } else {
-        res.status(202).json(number);
-      }
-    } catch (error) {
-      next(error);
+router.delete("/plant/:plantId", auth, async (req, res, next) => {
+  try {
+    const number = await Plant.destroy({ where: { id: req.params.plantId } });
+    if (number === 0) {
+      res.status(404).send({ message: "No plant found" });
+    } else {
+      res.status(202).json(number);
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 module.exports = router;
