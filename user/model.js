@@ -1,7 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 const Plant = require("../plant/model")
-
 const User = db.define(
   "user",
   {
