@@ -8,8 +8,10 @@ const router = new Router();
 router.post("/login", async (req, res, next) => {
   try {
     const loginInfo = req.body;
-    if (!loginInfo.email || !loginInfo.password || !loginInfo.username) {
-      res.status(400).send({message:"Please supply a valid name, email and password"});
+    if (!loginInfo.email || !loginInfo.password) {
+      res
+        .status(400)
+        .send({ message: "Please supply a valid name, email and password" });
     } else {
       const userFound = await User.findOne({
         where: {
@@ -17,7 +19,9 @@ router.post("/login", async (req, res, next) => {
         }
       });
       if (!userFound) {
-        res.status(400).send({message:"User with that email does not exist"});
+        res
+          .status(400)
+          .send({ message: "User with that email does not exist" });
       } else if (bcrypt.compareSync(loginInfo.password, userFound.password)) {
         res.send({
           jwt: toJWT({ userId: userFound.id }),
@@ -25,7 +29,7 @@ router.post("/login", async (req, res, next) => {
           name: userFound.username
         });
       } else {
-        res.status(400).send({message:"Password was incorrect"});
+        res.status(400).send({ message: "Password was incorrect" });
       }
     }
   } catch (error) {
