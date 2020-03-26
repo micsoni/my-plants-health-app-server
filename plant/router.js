@@ -3,7 +3,6 @@ const Plant = require("../plant/model");
 const auth = require("../auth/middleware");
 const Alarm = require("../alarm/model");
 const AlarmEvent = require("../alarmEvent/model");
-const authorize = require("../user/middleware");
 const Note = require("../note/model");
 
 const router = express.Router();

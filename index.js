@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
+const logingRouter = require("./auth/router");
 const userRouter = require("./user/router");
 const plantRouter = require("./plant/router");
+const noteRouter = require("./note/router");
+const alarmRouter = require("./alarm/router");
 
 const logingRouter = require("./auth/router");
 
@@ -17,5 +20,7 @@ app.use(parser);
 app.use(logingRouter);
 app.use(userRouter);
 app.use(plantRouter);
+app.use(noteRouter);
+app.use(alarmRouter);
 
 app.listen(port, () => console.log(`Listening on :${port}`));
