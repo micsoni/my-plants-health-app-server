@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("./model");
+const Plant = require("../plant/model");
 const auth = require("../auth/middleware");
 const { toJWT } = require("../auth/jwt");
 
@@ -35,9 +36,9 @@ router.post("/user", async (req, res, next) => {
   }
 });
 
-router.get("/user/:userId", auth, async (req, res, next) => {
+router.get("/user/current", auth, async (req, res, next) => {
   try {
-    const userFound = await User.findByPk(req.params.userId, {
+    const userFound = await User.findByPk(req.user.dataValues.id, {
       include: [Plant]
     });
 

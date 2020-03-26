@@ -11,7 +11,7 @@ router.post("/login", async (req, res, next) => {
     if (!loginInfo.email || !loginInfo.password) {
       res
         .status(400)
-        .send({ message: "Please supply a valid name, email and password" });
+        .send({ message: "Please supply a valid email and password" });
     } else {
       const userFound = await User.findOne({
         where: {

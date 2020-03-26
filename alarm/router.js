@@ -1,10 +1,13 @@
 const express = require("express");
 const auth = require("../auth/middleware");
+const authorize = require("../user/middleware")
 const Alarm = require("./model");
 
 const router = express.Router();
 
-router.post("/alarm", auth, async (req, res, next) => {
+router.use("/alarm", auth, authorize);
+
+router.post("/alarm", async (req, res, next) => {
   try {
     if (!req.body.name || !req.body.frequency || !req.body.time) {
       res.status(400).send({
@@ -19,7 +22,7 @@ router.post("/alarm", auth, async (req, res, next) => {
   }
 });
 
-router.put("/alarm/:alarmId", auth, async (req, res, next) => {
+router.put("/alarm/:alarmId", async (req, res, next) => {
   try {
     if (!req.body.name || !req.body.frequency || !req.body.time) {
       res.status(400).send({
@@ -35,7 +38,7 @@ router.put("/alarm/:alarmId", auth, async (req, res, next) => {
   }
 });
 
-router.delete("/alarm/:alarmId", auth, async (req, res, next) => {
+router.delete("/alarm/:alarmId", async (req, res, next) => {
   try {
     const number = await Alarm.destroy({ where: { id: req.params.alarmId } });
     if (number === 0) {

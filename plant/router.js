@@ -12,11 +12,16 @@ router.get("/plant/:plantId", auth, async (req, res, next) => {
     const plantFound = await Plant.findByPk(req.params.plantId, {
       include: [{ model: Alarm, include: [AlarmEvent] }, Note]
     });
+
     if (!plantFound) {
-      res.status(404).send({ message: "Plant not found" });
-    } else {
-      res.send(plantFound);
+      return res.status(404).send({ message: "Plant not found" });
     }
+
+    if (plantFound.userId !== req.user.dataValues.id) {
+      return res.status(401).send({ message: "User unauthorized" });
+    }
+
+    return res.send(plantFound);
   } catch (error) {
     next(error);
   }
@@ -47,14 +52,13 @@ router.get("/plant", auth, async (req, res, next) => {
 router.post("/plant", auth, async (req, res, next) => {
   try {
     if (!req.body.name) {
-      res.status(400).send({
+      return res.status(400).send({
         message: "All plants must have a name"
       });
-    } else {
-      req.body.userId = req.user.dataValues.id
-      const postPlant = await Plant.create(req.body);
-      res.send(postPlant);
     }
+    req.body.userId = req.user.dataValues.id;
+    const postPlant = await Plant.create(req.body);
+    return res.send(postPlant);
   } catch (error) {
     next(error);
   }
@@ -63,14 +67,16 @@ router.post("/plant", auth, async (req, res, next) => {
 router.put("/plant/:plantId", auth, async (req, res, next) => {
   try {
     if (!req.body.name) {
-      res.status(400).send({
+      return res.status(400).send({
         message: "All plants must have a name"
       });
-    } else {
-      const plant = await Plant.findByPk(req.params.plantId);
-      const updated = await plant.update(req.body);
-      res.send(updated);
     }
+    const plant = await Plant.findByPk(req.params.plantId);
+    if (plant.userId !== req.user.dataValues.id) {
+      return res.status(401).send({ message: "User unauthorized" });
+    }
+    const updated = await plant.update(req.body);
+    return res.send(updated);
   } catch (error) {
     next(error);
   }
@@ -78,7 +84,9 @@ router.put("/plant/:plantId", auth, async (req, res, next) => {
 
 router.delete("/plant/:plantId", auth, async (req, res, next) => {
   try {
-    const number = await Plant.destroy({ where: { id: req.params.plantId } });
+    const number = await Plant.destroy({
+      where: { id: req.params.plantId, userId: req.user.dataValues.id }
+    });
     if (number === 0) {
       res.status(404).send({ message: "No plant found" });
     } else {
