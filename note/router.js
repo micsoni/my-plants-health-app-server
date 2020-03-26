@@ -1,10 +1,13 @@
 const express = require("express");
 const auth = require("../auth/middleware");
+const authorize = require("../user/middleware")
 const Note = require("./model");
 
 const router = express.Router();
 
-router.post("/note", auth, async (req, res, next) => {
+router.use("/note", auth, authorize);
+
+router.post("/note", async (req, res, next) => {
   try {
     if (!req.body.text) {
       res.status(400).send({
@@ -19,7 +22,7 @@ router.post("/note", auth, async (req, res, next) => {
   }
 });
 
-router.put("/note/:noteId", auth, async (req, res, next) => {
+router.put("/note/:noteId", async (req, res, next) => {
   try {
     if (!req.body.text) {
       res.status(400).send({
@@ -35,7 +38,7 @@ router.put("/note/:noteId", auth, async (req, res, next) => {
   }
 });
 
-router.delete("/note/:noteId", auth, async (req, res, next) => {
+router.delete("/note/:noteId", async (req, res, next) => {
   try {
     const number = await Note.destroy({ where: { id: req.params.noteId } });
     if (number === 0) {
