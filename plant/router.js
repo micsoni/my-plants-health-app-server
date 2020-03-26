@@ -51,6 +51,7 @@ router.post("/plant", auth, async (req, res, next) => {
         message: "All plants must have a name"
       });
     } else {
+      req.body.userId = req.user.dataValues.id
       const postPlant = await Plant.create(req.body);
       res.send(postPlant);
     }
