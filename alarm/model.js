@@ -24,6 +24,15 @@ const Alarm = db.define(
         isInt: true, 
       }
     },
+    time: {
+      type: Sequelize.TIME,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "time can't be null"
+        }
+      }
+    },
     active: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
