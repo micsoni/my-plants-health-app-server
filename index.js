@@ -3,6 +3,8 @@ const cors = require("cors");
 const userRouter = require("./user/router");
 const plantRouter = require("./plant/router");
 
+const logingRouter = require("./auth/router");
+
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -12,6 +14,7 @@ app.use(corsMiddleware);
 const parser = express.json();
 app.use(parser);
 
+app.use(logingRouter);
 app.use(userRouter);
 app.use(plantRouter);
 
