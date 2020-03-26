@@ -6,8 +6,6 @@ const plantRouter = require("./plant/router");
 const noteRouter = require("./note/router");
 const alarmRouter = require("./alarm/router");
 
-const logingRouter = require("./auth/router");
-
 const app = express();
 const port = process.env.PORT || 4000;
 
