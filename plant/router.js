@@ -28,14 +28,15 @@ router.get("/plant/:plantId", auth, async (req, res, next) => {
 });
 
 router.get("/plant", auth, async (req, res, next) => {
-  const limit = Math.min(req.query.limit || 8, 50);
+  const limit = Math.min(req.query.limit || 12, 50);
   const offset = req.query.offset || 0;
   try {
     const allPlants = await Plant.findAndCountAll({
       where: { userId: req.user.dataValues.id },
       include: [Alarm],
       limit,
-      offset
+      offset,
+      order: [["id", "DESC"]]
     });
 
     allPlants.pageCount = Math.ceil(allPlants.count / limit);

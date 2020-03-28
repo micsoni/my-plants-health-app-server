@@ -15,7 +15,8 @@ const Plant = db.define("plant", {
   },
   image: {
     type: Sequelize.STRING,
-    allowNull: true
+    defaultValue:
+      "https://res.cloudinary.com/plants-health/image/upload/v1585307183/plant_lv1cuj.png"
   }
 });
 
