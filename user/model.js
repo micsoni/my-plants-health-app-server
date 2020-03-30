@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 const Plant = require("../plant/model")
+const Subscription = require("../notification/model")
+
 const User = db.define(
   "user",
   {
@@ -41,6 +43,9 @@ const User = db.define(
 //plant relation with user
 Plant.belongsTo(User);
 User.hasMany(Plant);
+
+Subscription.belongsTo(User)
+User.hasMany(Subscription)
 
 module.exports = User;
 

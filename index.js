@@ -5,6 +5,7 @@ const userRouter = require("./user/router");
 const plantRouter = require("./plant/router");
 const noteRouter = require("./note/router");
 const alarmRouter = require("./alarm/router");
+const subscriptionRouter = require("./notification/subscriptionHandler");
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -20,5 +21,6 @@ app.use(userRouter);
 app.use(plantRouter);
 app.use(noteRouter);
 app.use(alarmRouter);
+app.use(subscriptionRouter);
 
 app.listen(port, () => console.log(`Listening on :${port}`));
