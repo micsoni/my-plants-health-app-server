@@ -29,29 +29,4 @@ router.post("/subscription", auth, async (req, res, next) => {
   }
 });
 
-router.get("/subscription/:id", async function sendPushNotification(req, res) {
-  const subscriptionId = req.params.id;
-
-  const pushSubscription = await Subscription.findByPk(subscriptionId)
- 
-  setTimeout(function() {
-    webpush
-      .sendNotification(
-        pushSubscription,
-        JSON.stringify({
-          title: "New Alarm",
-          text: "Time to water your plant! :)",
-          image:
-            "https://res.cloudinary.com/plants-health/image/upload/v1585307183/plant_lv1cuj.png",
-          tag: "new-alarm",
-          url: "/plant/:plantId"
-        })
-      )
-      .catch(err => {
-        console.log(err);
-      });
-  }, 5000);
-  res.status(202).json({});
-});
-
 module.exports = router;
