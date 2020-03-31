@@ -1,47 +1,32 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
-const AlarmEvent = require("../alarmEvent/model");
 
-const Alarm = db.define(
-  "alarm",
-  {
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "Alarm's name can't be null"
-        }
+const Alarm = db.define("alarm", {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: "Alarm's name can't be null"
       }
-    },
-    frequency: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "Alarm's frequency can't be null"
-        },
-        isInt: true, 
-      }
-    },
-    time: {
-      type: Sequelize.TIME,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: "time can't be null"
-        }
-      }
-    },
-    active: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
     }
-  }
-);
-
-//alarm relation with alarmEvent
-AlarmEvent.belongsTo(Alarm);
-Alarm.hasMany(AlarmEvent);
+  },
+  active: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
+  },
+  dayOfTheWeek: {
+    type: Sequelize.ARRAY({type:Sequelize.INTEGER, alowNull: true})
+  },
+  time: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: "time can't be null"
+      }
+    }
+  },
+});
 
 module.exports = Alarm;
