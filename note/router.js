@@ -5,9 +5,7 @@ const Note = require("./model");
 
 const router = express.Router();
 
-router.use("/note", auth, authorize);
-
-router.post("/note", async (req, res, next) => {
+router.post("/note", auth, authorize, async (req, res, next) => {
   try {
     if (!req.body.text) {
       res.status(400).send({
@@ -22,7 +20,7 @@ router.post("/note", async (req, res, next) => {
   }
 });
 
-router.put("/note/:noteId", async (req, res, next) => {
+router.put("/note/:noteId", auth, authorize, async (req, res, next) => {
   try {
     if (!req.body.text) {
       res.status(400).send({
@@ -38,7 +36,7 @@ router.put("/note/:noteId", async (req, res, next) => {
   }
 });
 
-router.delete("/note/:noteId", async (req, res, next) => {
+router.delete("/note/:noteId", auth, authorize, async (req, res, next) => {
   try {
     const number = await Note.destroy({ where: { id: req.params.noteId } });
     if (number === 0) {

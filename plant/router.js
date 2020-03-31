@@ -2,7 +2,6 @@ const express = require("express");
 const Plant = require("../plant/model");
 const auth = require("../auth/middleware");
 const Alarm = require("../alarm/model");
-const AlarmEvent = require("../alarmEvent/model");
 const Note = require("../note/model");
 
 const router = express.Router();
@@ -10,7 +9,7 @@ const router = express.Router();
 router.get("/plant/:plantId", auth, async (req, res, next) => {
   try {
     const plantFound = await Plant.findByPk(req.params.plantId, {
-      include: [{ model: Alarm, include: [AlarmEvent] }, Note]
+      include: [Alarm, Note]
     });
 
     if (!plantFound) {
