@@ -32,7 +32,7 @@ router.get("/plant", auth, async (req, res, next) => {
   try {
     const allPlants = await Plant.findAndCountAll({
       where: { userId: req.user.dataValues.id },
-      include: [Alarm],
+      include: [Alarm, Note],
       limit,
       offset,
       order: [["id", "DESC"]]
