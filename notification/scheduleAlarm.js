@@ -18,7 +18,7 @@ webpush.setVapidDetails(
 );
 
 async function main() {
-  const now = new Date(); // 2020-03-30T17:04:18
+  const now = new Date();
   const minutes = now.getHours() * 60 + now.getMinutes();
   const day = now.getDay();
 
@@ -40,7 +40,7 @@ async function main() {
                 text: `Time to care for your ${alarm.plant.name}! :)`,
                 image: alarm.plant.image,
                 tag: "alarm",
-                url: `http://localhost:3000/plants/${alarm.plantId}`
+                url: self.location.origin + `/plants/${alarm.plantId}`
               })
             );
           } catch (err) {
