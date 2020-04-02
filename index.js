@@ -10,6 +10,7 @@ const subscriptionRouter = require("./notification/subscriptionHandler");
 const main = require("./notification/scheduleAlarm");
 
 cron.schedule("*/1 * * * *", async () => {
+  console.log("Running alarm triggers...");
   await main();
 });
 

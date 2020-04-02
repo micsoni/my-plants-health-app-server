@@ -22,10 +22,13 @@ async function main() {
   const minutes = now.getHours() * 60 + now.getMinutes();
   const day = now.getDay();
 
+  console.log("Looking for alarms to ", now.toString());
   const alarms = await Alarm.findAll({
     where: { time: minutes },
     include: { all: true, nested: true }
   }).filter(alarm => alarm.dayOfTheWeek.includes(day));
+
+  console.log(`Found ${alarms.length} alarms`);
 
   const promisses = alarms.reduce((acc, alarm) => {
     return acc.concat(
