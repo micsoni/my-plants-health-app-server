@@ -27,7 +27,6 @@ router.post("/user", async (req, res, next) => {
       const jwt = toJWT({ userId: createdUser.id });
       res.send({
         jwt,
-        id: createdUser.id,
         username: createdUser.username
       });
     }
