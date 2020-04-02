@@ -2,6 +2,7 @@ const express = require("express");
 const auth = require("../auth/middleware");
 const authorize = require("../user/middleware")
 const Note = require("./model");
+const Plant = require("../plant/model")
 
 const router = express.Router();
 
@@ -48,5 +49,27 @@ router.delete("/note/:noteId", auth, authorize, async (req, res, next) => {
     next(error);
   }
 });
+
+router.get("/note", auth, async (req, res, next) => {
+  try {
+    const plants = await Plant.findAll({
+      where: { userId: req.user.dataValues.id },
+      include: [Note],
+      order: [["id", "DESC"]]
+    });
+
+    const notes = plants.reduce((acc, plant) => {
+      plant.notes.forEach(note => {
+        note.dataValues.plant = { ...plant.dataValues, notes: undefined };
+      });
+      return acc.concat(plant.notes);
+    }, []);
+
+    res.send(notes);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 module.exports = router;

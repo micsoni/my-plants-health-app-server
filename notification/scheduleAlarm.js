@@ -40,7 +40,7 @@ async function main() {
                 text: `Time to care for your ${alarm.plant.name}! :)`,
                 image: alarm.plant.image,
                 tag: "alarm",
-                url: self.location.origin + `/plants/${alarm.plantId}`
+                url: `http://localhost:3000/plants/${alarm.plantId}`
               })
             );
           } catch (err) {

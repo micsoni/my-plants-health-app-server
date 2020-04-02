@@ -25,7 +25,6 @@ router.post("/login", async (req, res, next) => {
       } else if (bcrypt.compareSync(loginInfo.password, userFound.password)) {
         res.send({
           jwt: toJWT({ userId: userFound.id }),
-          id: userFound.id,
           name: userFound.username
         });
       } else {
